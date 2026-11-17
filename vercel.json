@@ -1,0 +1,16 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/acesso", "destination": "/acesso.html" },
+    { "source": "/acesso.php", "destination": "/acesso.html" }
+  ],
+  "headers": [
+    {
+      "source": "/acesso(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Cache-Control", "value": "private, no-store" }
+      ]
+    }
+  ]
+}

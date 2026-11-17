@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<style id="seu-gate-style">
+  x-dc { display: none !important; }
+  #seu-gate {
+    min-height: 100vh; display: grid; place-items: center; padding: 24px;
+    background: #080C2B; color: #FFFFFF; font-family: system-ui, -apple-system, sans-serif; text-align: center;
+  }
+</style>
+<script>
+(function() {
+  var ENDPOINT = 'https://vnmknnlgetguvtgahjdg.supabase.co/functions/v1/clever-worker';
+  var m = window.location.search.match(/[?&]session_id=([^&#]+)/);
+  var sid = m ? m[1].replace(/[^A-Za-z0-9_]/g, '') : '';
+  if (!/^cs_(test|live)_[A-Za-z0-9]+$/.test(sid)) {
+    window.location.replace('./');
+    return;
+  }
+  function checar() {
+    fetch(ENDPOINT + '?acao=verificar&sid=' + encodeURIComponent(sid), { cache: 'no-store' })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d && d.status === 'pago') {
+          var st = document.getElementById('seu-gate-style');
+          if (st) st.remove();
+          var gt = document.getElementById('seu-gate');
+          if (gt) gt.remove();
+        } else if (d && d.status === 'processando') {
+          setTimeout(checar, 6000);
+        } else {
+          window.location.replace('./');
+        }
+      })
+      .catch(function() {
+        setTimeout(checar, 6000);
+      });
+  }
+  checar();
+})();
+</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<div id="seu-gate">
+  <div>
+    <h1 style="margin:0 0 12px; font-size:28px;">Confirmando seu pagamento…</h1>
+    <p style="margin:0; font-size:17px; color:#D5DBF7;">Assim que a confirmação chegar, esta página abre seus downloads sozinha.</p>
+  </div>
+</div>
+<x-dc>
+<helmet>
+  <title>Seu acesso · SeuImaginar</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#080C2B">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800;900&amp;display=swap">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#080C2B;color:#FFFFFF;font-family:'Figtree',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    a{color:#D2FD02}
+    a:hover{color:#E2FF4D}
+    ::selection{background:#D2FD02;color:#04009A}
+    :focus-visible{outline:2px solid #D2FD02;outline-offset:3px}
+  </style>
+</helmet>
+<div style="min-height:100vh; display:flex; flex-direction:column; background:#080C2B; color:#FFFFFF; font-family:'Figtree', system-ui, sans-serif; overflow-x:clip;">
+
+  <header style="border-bottom:1px solid rgba(255,255,255,0.08);">
+    <div style="max-width:760px; height:65px; margin:0 auto; padding:0 20px; display:flex; align-items:center; gap:10px;">
+      <img decoding="async" src="assets/logo-mark.webp" alt="" width="33" height="34" style="display:block; width:33px; height:34px;">
+      <span style="font-weight:800; font-size:22px; letter-spacing:-0.025em; line-height:1;">SeuImaginar</span>
+    </div>
+  </header>
+
+  <main data-screen-label="Acesso" style="position:relative; flex:1 0 auto; padding:clamp(40px, 8vw, 88px) 20px clamp(56px, 9vw, 104px);">
+    <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(50% 40% at 88% 0%, rgba(0,17,182,0.55) 0%, rgba(0,17,182,0) 70%);"></div>
+    <div style="position:relative; max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:clamp(40px, 6vw, 64px);">
+
+      <div style="display:flex; flex-direction:column; align-items:flex-start; gap:18px;">
+        <span style="display:inline-flex; align-items:center; gap:8px; padding:8px 14px 8px 10px; border-radius:999px; background:#D2FD02; color:#04009A; font-weight:800; font-size:14px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+          <span>Pagamento aprovado</span>
+        </span>
+        <h1 style="margin:0; font-weight:900; font-size:clamp(42px, calc(4vw + 26px), 80px); line-height:0.9; letter-spacing:-0.035em; text-transform:uppercase;">Seu acesso <span style="display:block; color:#D2FD02;">está liberado</span></h1>
+        <p style="margin:0; max-width:540px; font-size:clamp(17px, 1.7vw, 20px); line-height:1.5; font-weight:500; color:#D5DBF7; text-wrap:pretty;">Baixe os arquivos abaixo. <strong style="color:#FFFFFF; font-weight:800;">Salve esta página nos favoritos</strong> para baixar de novo quando precisar.</p>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:16px 18px; padding:clamp(18px, 3vw, 24px); border-radius:24px; border:2px solid #D2FD02; background:linear-gradient(180deg, #121B60 0%, #0B1036 100%); box-shadow:0 24px 60px rgba(0,0,20,0.45);">
+          <span style="flex:none; width:52px; height:52px; border-radius:16px; background:#D2FD02; display:grid; place-items:center;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#04009A" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="10" y1="11" y2="11"></line><line x1="8" x2="8" y1="9" y2="13"></line><line x1="15" x2="15.01" y1="12" y2="12"></line><line x1="18" x2="18.01" y1="10" y2="10"></line><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"></path></svg>
+          </span>
+          <div style="flex:999 1 160px; min-width:0; display:flex; flex-direction:column; gap:5px;">
+            <span style="font-weight:900; font-size:clamp(18px, 2.2vw, 22px); line-height:1.15; letter-spacing:-0.015em;">Casamento dos Monstrinhos</span>
+            <span style="font-size:14px; font-weight:700; color:#A9B3E0;">Game interativo · .zip · PC com Windows</span>
+            <sc-if value="{{ hasPassword }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px; font-weight:700; color:#D5DBF7;">Senha do .zip: <strong style="color:#D2FD02; font-weight:900; user-select:all; -webkit-user-select:all; overflow-wrap:anywhere;">{{ zipPassword }}</strong></span></sc-if>
+          </div>
+          <a href="{{ gameHref }}" style="flex:1 0 auto; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:15px 22px; border-radius:999px; background:#D2FD02; color:#04009A; font-weight:900; font-size:16px; text-decoration:none; box-shadow:0 4px 0 #8DB000; transition:transform .1s, box-shadow .1s, background .12s;" style-hover="background:#DEFF33; color:#04009A;" style-active="transform:translateY(3px); box-shadow:0 1px 0 #8DB000;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+            <span>Baixar game</span>
+          </a>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:16px 18px; padding:clamp(18px, 3vw, 24px); border-radius:24px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.03);">
+          <span style="flex:none; width:52px; height:52px; border-radius:16px; background:rgba(210,253,2,0.12); display:grid; place-items:center;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D2FD02" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>
+          </span>
+          <div style="flex:999 1 160px; min-width:0; display:flex; flex-direction:column; gap:5px;">
+            <span style="font-weight:900; font-size:clamp(18px, 2.2vw, 22px); line-height:1.15; letter-spacing:-0.015em;">Guia Como usar o game</span>
+            <span style="font-size:14px; font-weight:700; color:#A9B3E0;">PDF · comece por aqui</span>
+          </div>
+          <a href="{{ howtoHref }}" style="flex:1 0 auto; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:13px 22px; border-radius:999px; border:2px solid #D2FD02; color:#D2FD02; font-weight:900; font-size:16px; text-decoration:none; transition:background .15s, color .15s;" style-hover="background:#D2FD02; color:#04009A;" style-active="background:#B8E000; border-color:#B8E000; color:#04009A;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+            <span>Baixar PDF</span>
+          </a>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:16px 18px; padding:clamp(18px, 3vw, 24px); border-radius:24px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.03);">
+          <span style="flex:none; width:52px; height:52px; border-radius:16px; background:rgba(210,253,2,0.12); display:grid; place-items:center;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D2FD02" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
+          </span>
+          <div style="flex:999 1 160px; min-width:0; display:flex; flex-direction:column; gap:5px;">
+            <span style="font-weight:900; font-size:clamp(18px, 2.2vw, 22px); line-height:1.15; letter-spacing:-0.015em;">Faturando com SeuImaginar</span>
+            <span style="font-size:14px; font-weight:700; color:#A9B3E0;">PDF · feed, lives e IA</span>
+          </div>
+          <a href="{{ pdfHref }}" style="flex:1 0 auto; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:13px 22px; border-radius:999px; border:2px solid #D2FD02; color:#D2FD02; font-weight:900; font-size:16px; text-decoration:none; transition:background .15s, color .15s;" style-hover="background:#D2FD02; color:#04009A;" style-active="background:#B8E000; border-color:#B8E000; color:#04009A;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+            <span>Baixar PDF</span>
+          </a>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <h2 style="margin:0; font-weight:900; font-size:clamp(30px, 4.4vw, 46px); line-height:0.95; letter-spacing:-0.03em; text-transform:uppercase;">Como instalar <span style="color:#D2FD02;">o game</span></h2>
+        <ol style="margin:0; padding:0; list-style:none; display:flex; flex-direction:column; border-top:1px solid rgba(255,255,255,0.12);">
+          <li style="display:flex; align-items:flex-start; gap:16px; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.12);">
+            <span style="flex:none; width:36px; height:36px; border-radius:50%; border:2px solid #D2FD02; color:#D2FD02; display:grid; place-items:center; font-weight:900; font-size:16px; font-variant-numeric:tabular-nums;">1</span>
+            <p style="margin:0; padding-top:6px; font-size:17px; line-height:1.5; font-weight:500; color:#D5DBF7; text-wrap:pretty;"><strong style="color:#FFFFFF; font-weight:800;">Baixe o game</strong> no botão acima, no computador com Windows.</p>
+          </li>
+          <li style="display:flex; align-items:flex-start; gap:16px; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.12);">
+            <span style="flex:none; width:36px; height:36px; border-radius:50%; border:2px solid #D2FD02; color:#D2FD02; display:grid; place-items:center; font-weight:900; font-size:16px; font-variant-numeric:tabular-nums;">2</span>
+            <p style="margin:0; padding-top:6px; font-size:17px; line-height:1.5; font-weight:500; color:#D5DBF7; text-wrap:pretty;"><strong style="color:#FFFFFF; font-weight:800;">Extraia o .zip.</strong> Clique com o botão direito no arquivo e escolha <strong style="color:#FFFFFF; font-weight:800;">Extrair tudo</strong>.<sc-if value="{{ hasPassword }}" hint-placeholder-val="{{ false }}"><span style="margin-left:0.3em;">Quando pedir, digite a senha do .zip.</span></sc-if></p>
+          </li>
+          <li style="display:flex; align-items:flex-start; gap:16px; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.12);">
+            <span style="flex:none; width:36px; height:36px; border-radius:50%; border:2px solid #D2FD02; color:#D2FD02; display:grid; place-items:center; font-weight:900; font-size:16px; font-variant-numeric:tabular-nums;">3</span>
+            <p style="margin:0; padding-top:6px; font-size:17px; line-height:1.5; font-weight:500; color:#D5DBF7; text-wrap:pretty;"><strong style="color:#FFFFFF; font-weight:800;">Abra o “Casamento dos Monstrinhos.exe”</strong> com dois cliques, não precisa instalar. Se aparecer “O Windows protegeu o computador”, clique em <strong style="color:#FFFFFF; font-weight:800;">Mais informações</strong> e depois em <strong style="color:#FFFFFF; font-weight:800;">Executar assim mesmo</strong>.</p>
+          </li>
+          <li style="display:flex; align-items:flex-start; gap:16px; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.12);">
+            <span style="flex:none; width:36px; height:36px; border-radius:50%; border:2px solid #D2FD02; color:#D2FD02; display:grid; place-items:center; font-weight:900; font-size:16px; font-variant-numeric:tabular-nums;">4</span>
+            <p style="margin:0; padding-top:6px; font-size:17px; line-height:1.5; font-weight:500; color:#D5DBF7; text-wrap:pretty;"><strong style="color:#FFFFFF; font-weight:800;">Coloque na live e ative.</strong> No TikTok LIVE Studio, adicione uma <strong style="color:#FFFFFF; font-weight:800;">Captura de janela</strong> com a janela do jogo, comece a live e conecte seu @ no jogo. <strong style="color:#D2FD02; font-weight:800;">Para ativar no jogo (até 5 contas), use o MESMO e-mail que você usou para pagar.</strong></p>
+          </li>
+        </ol>
+      </div>
+
+      <sc-if value="{{ hasSupport }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; align-items:flex-start; gap:16px; padding:20px 22px; border-radius:22px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.03);">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#D2FD02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg>
+          <div style="min-width:0; display:flex; flex-direction:column; gap:4px;">
+            <span style="font-weight:900; font-size:18px; letter-spacing:-0.01em;">Problema com o download?</span>
+            <p style="margin:0; font-size:16px; line-height:1.5; font-weight:500; color:#D5DBF7; overflow-wrap:anywhere;">Fale com a gente: <a href="{{ supportHref }}" target="_blank" rel="noopener" style="color:#D2FD02; font-weight:800; text-decoration:underline; text-underline-offset:3px;">{{ supportLabel }}</a></p>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </main>
+
+  <footer style="background:#060920; padding:32px 20px 40px; border-top:1px solid rgba(255,255,255,0.06);">
+    <div style="max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:6px; font-size:13px; line-height:1.6; color:#A9B3E0;">
+      <p style="margin:0;">© 2026 SeuImaginar. Pagamentos processados pela Stripe.</p>
+      <p style="margin:0;">Este site não é afiliado, patrocinado ou endossado pelo TikTok ou pela ByteDance.</p>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;gameUrl&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;downloads/casamento-dos-monstrinhos.zip&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Downloads&quot;}, &quot;howtoUrl&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;downloads/como-usar-o-game.pdf&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Downloads&quot;}, &quot;pdfUrl&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;downloads/faturando-com-seuimaginar.pdf&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Downloads&quot;}, &quot;zipPassword&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Downloads&quot;}, &quot;support&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;(22) 99879-5400&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Suporte (e-mail ou WhatsApp)&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props;
+    const url = (v, d) => String(v ?? '').trim() || d;
+    const sid = ((window.location.search.match(/[?&]session_id=([^&#]+)/) || [])[1] || '').replace(/[^A-Za-z0-9_]/g, '');
+    const base = 'https://vnmknnlgetguvtgahjdg.supabase.co/functions/v1/clever-worker';
+    const dl = (k, v, d) => sid ? base + '?arquivo=' + k + '&sid=' + sid : url(v, d);
+    const pw = String(p.zipPassword ?? '').trim();
+    const sup = String(p.support ?? '').trim();
+    const digits = sup.replace(/\D/g, '');
+    const supportHref = !sup ? '#'
+      : /^https?:\/\//i.test(sup) ? sup
+      : sup.includes('@') ? 'mailto:' + sup
+      : digits.length >= 10 ? 'https://wa.me/' + (digits.length <= 11 ? '55' + digits : digits)
+      : '#';
+    return {
+      gameHref: dl('jogo', p.gameUrl, 'downloads/casamento-dos-monstrinhos.zip'),
+      howtoHref: dl('guia', p.howtoUrl, 'downloads/como-usar-o-game.pdf'),
+      pdfHref: dl('pdf', p.pdfUrl, 'downloads/faturando-com-seuimaginar.pdf'),
+      hasPassword: !!pw, zipPassword: pw,
+      hasSupport: !!sup, supportHref, supportLabel: sup,
+    };
+  }
+}
+</script>
+</body>
+</html>
