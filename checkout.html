@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Checkout Seguro · SeuImaginar</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800;900&display=swap">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:#080C2B;color:#FFFFFF;font-family:'Figtree',system-ui,sans-serif;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+  header{border-bottom:1px solid rgba(255,255,255,0.08)}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px;width:100%}
+  .hdr{height:65px;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:800;font-size:22px;letter-spacing:-0.025em}
+  .badge-sec{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#D2FD02;background:rgba(210,253,2,0.1);border:1px solid rgba(210,253,2,0.3);padding:6px 12px;border-radius:999px}
+  main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+  .grid{max-width:860px;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start}
+  .card{background:linear-gradient(180deg,#121B60 0%,#0B1036 100%);border:1.5px solid rgba(255,255,255,0.14);border-radius:24px;padding:28px;box-shadow:0 24px 60px rgba(0,0,20,0.45)}
+  .card-highlight{border-color:#D2FD02}
+  .price-row{display:flex;align-items:baseline;gap:8px;color:#D2FD02;margin:12px 0 4px}
+  .price-row .cur{font-size:22px;font-weight:800}
+  .price-row .val{font-size:52px;font-weight:900;line-height:0.95;letter-spacing:-0.04em}
+  .list{list-style:none;padding:0;margin:20px 0 0;display:flex;flex-direction:column;gap:12px;border-top:1px solid rgba(255,255,255,0.12);padding-top:18px}
+  .list li{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:#D5DBF7}
+  .dot{width:22px;height:22px;border-radius:50%;background:#D2FD02;color:#04009A;display:grid;place-items:center;font-weight:900;font-size:13px;flex:none}
+  .spinner{width:22px;height:22px;border:3px solid rgba(210,253,2,0.25);border-top-color:#D2FD02;border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:17px 24px;border-radius:999px;background:#D2FD02;color:#04009A;font-weight:900;font-size:17px;border:0;cursor:pointer;text-decoration:none;box-shadow:0 5px 0 #8DB000;transition:transform .1s,background .15s;margin-top:18px}
+  .btn:hover{background:#DEFF33}
+  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 #8DB000}
+  .status-box{margin-top:16px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);font-size:14px;line-height:1.5;color:#D5DBF7}
+</style>
+<script>
+  // Se você colar um Payment Link fixo da Stripe aqui, redireciona direto:
+  var STRIPE_PAYMENT_LINK = "";
+  var SUPABASE_CHECKOUT = "https://vnmknnlgetguvtgahjdg.supabase.co/functions/v1/clever-worker?acao=checkout_json";
+
+  if (STRIPE_PAYMENT_LINK) {
+    window.location.replace(STRIPE_PAYMENT_LINK);
+  } else {
+    fetch(SUPABASE_CHECKOUT, { cache: "no-store" })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d && d.url) window.location.replace(d.url);
+      })
+      .catch(function() {});
+  }
+</script>
+</head>
+<body>
+  <header>
+    <div class="wrap hdr">
+      <a href="./" class="brand">
+        <img src="assets/logo-mark.webp" alt="" width="33" height="34">
+        <span>SeuImaginar</span>
+      </a>
+      <span class="badge-sec">🔒 Ambiente Seguro · Stripe</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid">
+      <div class="card">
+        <span style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#D2FD02">Resumo do pedido</span>
+        <h1 style="margin:6px 0 0;font-size:26px;font-weight:900;letter-spacing:-0.02em">Faturando com SeuImaginar + Game</h1>
+        <div class="price-row">
+          <span class="cur">R$</span>
+          <span class="val">35,42</span>
+        </div>
+        <span style="font-size:14px;color:#A9B3E0;font-weight:600">Pagamento único · Acesso vitalício</span>
+
+        <ul class="list">
+          <li><span class="dot">✓</span> Game Casamento dos Monstrinhos (até 5 contas)</li>
+          <li><span class="dot">✓</span> Guia Como Usar o Game na Live (PDF)</li>
+          <li><span class="dot">✓</span> Guia Faturando com SeuImaginar + IA (PDF)</li>
+          <li><span class="dot">✓</span> Liberação imediata + 7 dias de garantia</li>
+        </ul>
+      </div>
+
+      <div class="card card-highlight">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+          <span class="spinner" id="sp"></span>
+          <h2 style="margin:0;font-size:22px;font-weight:900" id="ttl">Conectando ao Checkout Stripe…</h2>
+        </div>
+        <p style="margin:0;font-size:15px;line-height:1.5;color:#D5DBF7" id="desc">
+          Preparando sua sessão de pagamento seguro via <strong>Pix ou Cartão de Crédito</strong>.
+        </p>
+
+        <div class="status-box" id="aviso">
+          ⚡ Assim que a verificação da conta Stripe (<em>In review</em>) concluir, esta página abre automaticamente o QR Code do Pix e o pagamento por Cartão.
+        </div>
+
+        <a href="./" class="btn">← Voltar para a página inicial</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
