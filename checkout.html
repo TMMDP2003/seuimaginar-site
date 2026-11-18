@@ -37,7 +37,8 @@
 <script>
   // Se você colar um Payment Link fixo da Stripe aqui, redireciona direto:
   var STRIPE_PAYMENT_LINK = "";
-  var SUPABASE_CHECKOUT = "https://vnmknnlgetguvtgahjdg.supabase.co/functions/v1/clever-worker?acao=checkout_json";
+  var baseSite = window.location.origin + window.location.pathname.replace(/\/checkout(\.html)?$/, '');
+  var SUPABASE_CHECKOUT = "https://vnmknnlgetguvtgahjdg.supabase.co/functions/v1/clever-worker?acao=checkout_json&origem=" + encodeURIComponent(baseSite);
 
   if (STRIPE_PAYMENT_LINK) {
     window.location.replace(STRIPE_PAYMENT_LINK);
