@@ -14,39 +14,125 @@
 <script>
 (function() {
   var ENDPOINT = 'https://vnmknnlgetguvtgahjdg.supabase.co/functions/v1/clever-worker';
-  var m = window.location.search.match(/[?&]session_id=([^&#]+)/);
-  var sid = m ? m[1].replace(/[^A-Za-z0-9_]/g, '') : '';
-  if (!/^cs_(test|live)_[A-Za-z0-9]+$/.test(sid)) {
-    window.location.replace('./');
-    return;
+  var qs = window.location.search || '';
+  var mSid = qs.match(/[?&]session_id=([^&#]+)/);
+  var sid = mSid ? mSid[1].replace(/[^A-Za-z0-9_]/g, '') : '';
+  var mEm = qs.match(/[?&]email=([^&#]+)/);
+  var emailUrl = mEm ? decodeURIComponent(mEm[1].replace(/\+/g, ' ')).trim().toLowerCase() : '';
+  var savedEmail = '';
+  try { savedEmail = (localStorage.getItem('seu_email_pago') || '').trim().toLowerCase(); } catch (e) {}
+  var emailAtual = emailUrl || savedEmail;
+
+  function atualizarLinkJogo(em, s) {
+    var href = em
+      ? ENDPOINT + '?arquivo=jogo&email=' + encodeURIComponent(em)
+      : (s ? ENDPOINT + '?arquivo=jogo&sid=' + encodeURIComponent(s) : '');
+    if (!href) return;
+    var aplicar = function() {
+      var links = document.querySelectorAll('a');
+      for (var i = 0; i < links.length; i++) {
+        var a = links[i];
+        var h = a.getAttribute('href') || '';
+        if (h.indexOf('arquivo=jogo') !== -1 || h.indexOf('casamento-dos-monstrinhos') !== -1) {
+          a.setAttribute('href', href);
+        }
+      }
+    };
+    aplicar();
+    setTimeout(aplicar, 300);
+    setTimeout(aplicar, 1000);
   }
-  function checar() {
+
+  function liberarTela(em, s) {
+    if (em) {
+      try { localStorage.setItem('seu_email_pago', em); } catch (e) {}
+      try {
+        var u = new URL(window.location.href);
+        u.searchParams.set('email', em);
+        window.history.replaceState({}, '', u.toString());
+      } catch (e) {}
+    }
+    var st = document.getElementById('seu-gate-style');
+    if (st) st.remove();
+    var gt = document.getElementById('seu-gate');
+    if (gt) gt.remove();
+    atualizarLinkJogo(em, s);
+  }
+
+  function mostrarFormulario(msgErro) {
+    var box = document.getElementById('seu-gate-box');
+    if (!box) return;
+    box.innerHTML =
+      '<h1 style="margin:0 0 10px; font-size:clamp(26px, 4vw, 36px); font-weight:900; letter-spacing:-0.02em;">LIBERAR MEU <span style="color:#D2FD02;">ACESSO</span></h1>' +
+      '<p style="margin:0 0 20px; font-size:16px; line-height:1.5; color:#D5DBF7; max-width:440px;">Digite abaixo o <strong style="color:#FFFFFF;">mesmo e-mail que você usou na compra</strong> (Kiwify) para acessar o download do game e dos PDFs:</p>' +
+      (msgErro ? '<div style="margin:0 0 16px; padding:12px 16px; border-radius:14px; background:rgba(255,70,70,0.14); border:1px solid rgba(255,90,90,0.4); color:#FFD6D6; font-size:14px; font-weight:600; max-width:440px;">' + msgErro + '</div>' : '') +
+      '<form id="seu-gate-form" style="display:flex; flex-direction:column; gap:12px; width:100%; max-width:420px; margin:0 auto;">' +
+        '<input id="seu-gate-email" type="email" required placeholder="seuemail@gmail.com" value="' + (emailAtual || '').replace(/"/g, '') + '" style="width:100%; padding:16px 18px; border-radius:16px; border:1.5px solid rgba(255,255,255,0.22); background:#121B60; color:#FFFFFF; font-size:16px; font-weight:600; outline:none; text-align:center;">' +
+        '<button id="seu-gate-btn" type="submit" style="width:100%; padding:16px 24px; border-radius:999px; border:0; background:#D2FD02; color:#04009A; font-weight:900; font-size:17px; cursor:pointer; box-shadow:0 4px 0 #8DB000;">Acessar meus downloads →</button>' +
+      '</form>';
+    var form = document.getElementById('seu-gate-form');
+    if (form) {
+      form.addEventListener('submit', function(ev) {
+        ev.preventDefault();
+        var inp = document.getElementById('seu-gate-email');
+        var btn = document.getElementById('seu-gate-btn');
+        var val = inp ? inp.value.trim().toLowerCase() : '';
+        if (!val || val.indexOf('@') === -1) return;
+        if (btn) { btn.disabled = true; btn.textContent = 'Verificando compra…'; }
+        emailAtual = val;
+        checarEmail(val, true);
+      });
+    }
+  }
+
+  function checarEmail(em, veioDoForm) {
+    fetch(ENDPOINT + '?acao=verificar&email=' + encodeURIComponent(em), { cache: 'no-store' })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d && d.status === 'pago') {
+          liberarTela(em, '');
+        } else {
+          mostrarFormulario(veioDoForm ? 'Ainda não encontramos uma compra aprovada para <strong>' + em.replace(/[<>&"]/g, '') + '</strong>. Se você acabou de pagar no Pix ou Cartão, aguarde alguns segundos e clique novamente.' : '');
+        }
+      })
+      .catch(function() {
+        mostrarFormulario('Erro de conexão ao verificar. Tente novamente em alguns segundos.');
+      });
+  }
+
+  function checarSid() {
     fetch(ENDPOINT + '?acao=verificar&sid=' + encodeURIComponent(sid), { cache: 'no-store' })
       .then(function(r) { return r.json(); })
       .then(function(d) {
         if (d && d.status === 'pago') {
-          var st = document.getElementById('seu-gate-style');
-          if (st) st.remove();
-          var gt = document.getElementById('seu-gate');
-          if (gt) gt.remove();
+          liberarTela('', sid);
         } else if (d && d.status === 'processando') {
-          setTimeout(checar, 6000);
+          setTimeout(checarSid, 6000);
         } else {
-          window.location.replace('./');
+          mostrarFormulario('');
         }
       })
       .catch(function() {
-        setTimeout(checar, 6000);
+        setTimeout(checarSid, 6000);
       });
   }
-  checar();
+
+  window.addEventListener('DOMContentLoaded', function() {
+    if (emailAtual && emailAtual.indexOf('@') !== -1) {
+      checarEmail(emailAtual, !!emailUrl);
+    } else if (/^cs_(test|live)_[A-Za-z0-9]+$/.test(sid)) {
+      checarSid();
+    } else {
+      mostrarFormulario('');
+    }
+  });
 })();
 </script>
 <script src="./support.js"></script>
 </head>
 <body>
 <div id="seu-gate">
-  <div>
+  <div id="seu-gate-box" style="display:flex; flex-direction:column; align-items:center;">
     <h1 style="margin:0 0 12px; font-size:28px;">Confirmando seu pagamento…</h1>
     <p style="margin:0; font-size:17px; color:#D5DBF7;">Assim que a confirmação chegar, esta página abre seus downloads sozinha.</p>
   </div>
@@ -172,7 +258,7 @@
 
   <footer style="background:#060920; padding:32px 20px 40px; border-top:1px solid rgba(255,255,255,0.06);">
     <div style="max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:6px; font-size:13px; line-height:1.6; color:#A9B3E0;">
-      <p style="margin:0;">© 2026 SeuImaginar. Pagamentos processados pela Stripe.</p>
+      <p style="margin:0;">© 2026 SeuImaginar. Pagamentos processados pela Kiwify.</p>
       <p style="margin:0;">Este site não é afiliado, patrocinado ou endossado pelo TikTok ou pela ByteDance.</p>
     </div>
   </footer>
@@ -183,9 +269,16 @@ class Component extends DCLogic {
   renderVals() {
     const p = this.props;
     const url = (v, d) => String(v ?? '').trim() || d;
-    const sid = ((window.location.search.match(/[?&]session_id=([^&#]+)/) || [])[1] || '').replace(/[^A-Za-z0-9_]/g, '');
+    const qs = window.location.search || '';
+    const sid = ((qs.match(/[?&]session_id=([^&#]+)/) || [])[1] || '').replace(/[^A-Za-z0-9_]/g, '');
+    const emRaw = ((qs.match(/[?&]email=([^&#]+)/) || [])[1] || '');
+    let savedEm = '';
+    try { savedEm = (localStorage.getItem('seu_email_pago') || '').trim().toLowerCase(); } catch (e) {}
+    const email = emRaw ? decodeURIComponent(emRaw.replace(/\+/g, ' ')).trim().toLowerCase() : savedEm;
     const base = 'https://vnmknnlgetguvtgahjdg.supabase.co/functions/v1/clever-worker';
-    const dl = (k, v, d) => sid ? base + '?arquivo=' + k + '&sid=' + sid : url(v, d);
+    const gameDl = email
+      ? base + '?arquivo=jogo&email=' + encodeURIComponent(email)
+      : (sid ? base + '?arquivo=jogo&sid=' + sid : base + '?arquivo=jogo');
     const pw = String(p.zipPassword ?? '').trim();
     const sup = String(p.support ?? '').trim();
     const digits = sup.replace(/\D/g, '');
@@ -195,9 +288,9 @@ class Component extends DCLogic {
       : digits.length >= 10 ? 'https://wa.me/' + (digits.length <= 11 ? '55' + digits : digits)
       : '#';
     return {
-      gameHref: dl('jogo', p.gameUrl, 'downloads/casamento-dos-monstrinhos.zip'),
-      howtoHref: dl('guia', p.howtoUrl, 'downloads/como-usar-o-game.pdf'),
-      pdfHref: dl('pdf', p.pdfUrl, 'downloads/faturando-com-seuimaginar.pdf'),
+      gameHref: gameDl,
+      howtoHref: url(p.howtoUrl, 'downloads/como-usar-o-game.pdf'),
+      pdfHref: url(p.pdfUrl, 'downloads/faturando-com-seuimaginar.pdf'),
       hasPassword: !!pw, zipPassword: pw,
       hasSupport: !!sup, supportHref, supportLabel: sup,
     };

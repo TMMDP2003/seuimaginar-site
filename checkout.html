@@ -35,13 +35,13 @@
   .status-box{margin-top:16px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);font-size:14px;line-height:1.5;color:#D5DBF7}
 </style>
 <script>
-  // Se você colar um Payment Link fixo da Stripe aqui, redireciona direto:
-  var STRIPE_PAYMENT_LINK = "";
+  // Link de checkout da Kiwify:
+  var KIWIFY_CHECKOUT_LINK = "https://pay.kiwify.com.br/mLLHA4S";
   var baseSite = window.location.origin + window.location.pathname.replace(/\/checkout(\.html)?$/, '');
   var SUPABASE_CHECKOUT = "https://vnmknnlgetguvtgahjdg.supabase.co/functions/v1/clever-worker?acao=checkout_json&origem=" + encodeURIComponent(baseSite);
 
-  if (STRIPE_PAYMENT_LINK) {
-    window.location.replace(STRIPE_PAYMENT_LINK);
+  if (KIWIFY_CHECKOUT_LINK) {
+    window.location.replace(KIWIFY_CHECKOUT_LINK);
   } else {
     fetch(SUPABASE_CHECKOUT, { cache: "no-store" })
       .then(function(r) { return r.json(); })
@@ -59,7 +59,7 @@
         <img src="assets/logo-mark.webp" alt="" width="33" height="34">
         <span>SeuImaginar</span>
       </a>
-      <span class="badge-sec">🔒 Ambiente Seguro · Stripe</span>
+      <span class="badge-sec">🔒 Ambiente Seguro · Kiwify</span>
     </div>
   </header>
 
@@ -85,14 +85,14 @@
       <div class="card card-highlight">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
           <span class="spinner" id="sp"></span>
-          <h2 style="margin:0;font-size:22px;font-weight:900" id="ttl">Conectando ao Checkout Stripe…</h2>
+          <h2 style="margin:0;font-size:22px;font-weight:900" id="ttl">Conectando ao Checkout Kiwify…</h2>
         </div>
         <p style="margin:0;font-size:15px;line-height:1.5;color:#D5DBF7" id="desc">
           Preparando sua sessão de pagamento seguro via <strong>Pix ou Cartão de Crédito</strong>.
         </p>
 
         <div class="status-box" id="aviso">
-          ⚡ Assim que a verificação da conta Stripe (<em>In review</em>) concluir, esta página abre automaticamente o QR Code do Pix e o pagamento por Cartão.
+          ⚡ Você será redirecionado automaticamente para concluir o pagamento na Kiwify e liberar o download imediato.
         </div>
 
         <a href="./" class="btn">← Voltar para a página inicial</a>
